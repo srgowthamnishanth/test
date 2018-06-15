@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- <meta charset="UTF-8"> -->
+    <title>Client Data</title>
+    <style>
+        .msg{
+            color: #0202bf;
+            font-weight: bold;
+            background: aliceblue;
+            padding: 10px;
+            margin: 10px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Please fill data in the form below:</h1>
+    <div class="msg"></div>
+    <form method="POST" id="myForm" action="/post-feedback">
+        <label>Name:
+            <input type="text" id="cname" name="client-name" required>
+        </label>
+        <br>
+        <label>Email:
+            <input type="text" id="cemail" name="client-email" required>
+        </label>
+        <br>
+        <label>Comment:
+            <br>
+            <textarea name="comment" id="ccomment"></textarea>
+        </label>
+        <br>
+        <input type="submit" id="submit" value="Submit">
+    </form>
+    <a href="/viewFeedback.html">View feedbacks</a>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+
+            $('#myForm').submit(function(){
+                
+                var clientName = $("#cname").val();
+                var clientEmail = $("#cemail").val();
+                var clientComment = $("#ccomment").val();
+
+                $.post('http://localhost:3000/postFeedback', 
+                { name: clientName, email: clientEmail, comment: clientComment })
+                .done(function(data) { 
+
+                    if(typeof data.message != undefined){
+
+                        $(".msg").html(data.message);
+                        $(".msg").css({color: "#0202bf"})
+                        $('.msg').show();   
+                    }
+                })
+                .fail(function(data){ 
+
+                    $(".msg").html(data.responseJSON.message);
+                    $(".msg").css({color: "red"})
+                    $('.msg').show();   
+                }) 
+
+                return false;
+            });
+
+
+        });
+    </script>
+</body>
+
+</html>
